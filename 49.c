@@ -17,32 +17,31 @@ struct Node* createNode(int data) {
     return newNode;
 }
 
-// Function to calculate the height of the binary tree
-int findHeight(struct Node* root) {
-    // Base Case: empty tree has height 0
+// Function to count leaf nodes
+int countLeafNodes(struct Node* root) {
+    // Base case: empty tree
     if (root == NULL) {
         return 0;
     }
 
-    // Recursive calls for left and right subtrees
-    int leftHeight = findHeight(root->left);
-    int rightHeight = findHeight(root->right);
-
-    // Return the larger height plus 1 for the current node
-    if (leftHeight > rightHeight) {
-        return (leftHeight + 1);
-    } else {
-        return (rightHeight + 1);
+    // If node is a leaf, return 1
+    if (root->left == NULL && root->right == NULL) {
+        return 1;
     }
+
+    // Total leaves = leaves in left subtree + leaves in right subtree
+    return countLeafNodes(root->left) + countLeafNodes(root->right);
 }
 
 int main() {
+
     struct Node* root = createNode(1);
     root->left = createNode(2);
     root->right = createNode(3);
     root->left->left = createNode(4);
+    root->left->right = createNode(5);
 
-    printf("Height of the tree: %d\n", findHeight(root));
+    printf("Total number of leaf nodes: %d\n", countLeafNodes(root));
 
     return 0;
 }

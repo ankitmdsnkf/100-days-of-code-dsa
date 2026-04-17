@@ -6,7 +6,7 @@ struct Node {
     struct Node *left, *right;
 };
 
-// Function to create a new node
+// Helper function to create a new node
 struct Node* createNode(int data) {
     if (data == -1) return NULL;
     struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
@@ -15,7 +15,7 @@ struct Node* createNode(int data) {
     return newNode;
 }
 
-// Function to build the tree from level-order input array
+// Build the tree from level-order array input
 struct Node* buildTree(int arr[], int n) {
     if (n == 0 || arr[0] == -1) return NULL;
     struct Node* root = createNode(arr[0]);
@@ -28,11 +28,9 @@ struct Node* buildTree(int arr[], int n) {
         struct Node* current = queue[front++];
         if (current == NULL) continue;
 
-        // Add left child
         current->left = createNode(arr[i++]);
         if (current->left) queue[rear++] = current->left;
         
-        // Add right child
         if (i < n) {
             current->right = createNode(arr[i++]);
             if (current->right) queue[rear++] = current->right;
@@ -41,29 +39,26 @@ struct Node* buildTree(int arr[], int n) {
     return root;
 }
 
-// Function to print the Right View of the tree
-void rightView(struct Node* root) {
+// Function to mirror the tree
+void mirror(struct Node* root) {
     if (root == NULL) return;
 
-    struct Node* queue[1000]; // Assuming max 1000 nodes
-    int front = 0, rear = 0;
-    queue[rear++] = root;
+    // Swap the left and right pointers
+    struct Node* temp = root->left;
+    root->left = root->right;
+    root->right = temp;
 
-    while (front < rear) {
-        int levelSize = rear - front; // Number of nodes at current level
+    // Recursively mirror subtrees
+    mirror(root->left);
+    mirror(root->right);
+}
 
-        for (int i = 0; i < levelSize; i++) {
-            struct Node* current = queue[front++];
-
-            // If it's the last node of the current level, print it
-            if (i == levelSize - 1) {
-                printf("%d ", current->data);
-            }
-
-            if (current->left) queue[rear++] = current->left;
-            if (current->right) queue[rear++] = current->right;
-        }
-    }
+// Function to print Inorder Traversal
+void printInorder(struct Node* root) {
+    if (root == NULL) return;
+    printInorder(root->left);
+    printf("%d ", root->data);
+    printInorder(root->right);
 }
 
 int main() {
@@ -75,9 +70,4 @@ int main() {
         scanf("%d", &arr[i]);
     }
 
-    struct Node* root = buildTree(arr, n);
-    rightView(root);
-    printf("\n");
-
-    return 0;
-}
+    struct Node* root
